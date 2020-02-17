@@ -1,0 +1,15 @@
+---
+- hosts: r640
+  connection: local
+  name: Schedule BIOS setting update
+  gather_facts: False
+
+  tasks:
+  - name: Create BIOS configuration job (schedule BIOS setting update)
+    idrac_redfish_command:
+      category: Systems
+      command: CreateBiosConfigJob
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+

@@ -1,0 +1,16 @@
+---
+- hosts: r640
+  connection: local
+  name: Graceful restart using Redfish
+  gather_facts: False
+
+  tasks:
+
+  - name: Restart system power gracefully
+    redfish_command:
+      category: Systems
+      command: PowerForceOff
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+

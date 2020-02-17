@@ -1,0 +1,29 @@
+
+---
+- hosts: r640
+  connection: local
+  name: Set BIOS boot override to PXE
+  gather_facts: False
+
+  vars:
+    bootdevice: "Pxe"
+
+  tasks:
+
+  - name: Set one-time boot device to {{ bootdevice }}
+    redfish_command:
+      category: Systems
+      command: SetOneTimeBoot
+      bootdevice: "{{ bootdevice }}"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Reboot system power gracefully
+    redfish_command:
+      category: Systems
+      command: PowerGracefulRestart
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+

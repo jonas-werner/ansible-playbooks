@@ -1,0 +1,20 @@
+---
+- hosts: r640
+  connection: local
+  name: Change HDD boot sequence using SCP
+  gather_facts: False
+
+  tasks:
+
+  - name: Import Server Configuration Profile from a network share
+    idrac_server_config_profile:
+      idrac_ip: "{{ baseuri }}"
+      idrac_user: "{{ username }}"
+      idrac_password: "{{ password }}"
+      command: "import"
+      share_name: "10.6.28.32:/nfs/ServerConfig"
+      share_user: "share_user_name"
+      share_password: "share_user_password"
+      scp_file: "r640-BiosBootSeq.xml"
+      scp_components: "ALL"
+      job_wait: True

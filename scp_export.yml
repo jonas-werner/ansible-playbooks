@@ -1,0 +1,21 @@
+---
+- hosts: r640
+  connection: local
+  name: Export BIOS SCP in XML format for use with Clones
+  gather_facts: False
+
+  tasks:
+
+  - name: Export Server Configuration Profile to a local path
+    idrac_server_config_profile:
+      idrac_ip: "{{ baseuri }}"
+      idrac_user: "{{ username }}"
+      idrac_password: "{{ password }}"
+      share_name: "/home/jonas/scp_files/"
+      share_user: "share_user_name"
+      share_password: "share_user_password"
+      job_wait: False
+      export_use: Clone
+      export_format: XML
+      scp_components: ALL
+

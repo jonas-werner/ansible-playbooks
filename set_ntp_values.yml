@@ -1,0 +1,21 @@
+---
+- hosts: r640
+  connection: local
+  name: Change iDRAC NTP Attributes
+  gather_facts: False
+
+  vars: 
+    ntpserver1: "1.jp.pool.ntp.org"
+
+  tasks:
+  - name: Enable NTP and set NTP server and Time zone attributes in iDRAC
+    idrac_redfish_config:
+      category: Manager
+      command: SetManagerAttributes
+      resource_id: iDRAC.Embedded.1
+      manager_attributes:
+        NTPConfigGroup.1.NTPEnable: "Enabled"
+        NTPConfigGroup.1.NTP1: "{{ ntpserver1 }}"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username}}"
+      password: "{{ password }}"

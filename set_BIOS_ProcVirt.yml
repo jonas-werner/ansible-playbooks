@@ -1,0 +1,16 @@
+---
+- hosts: r640
+  connection: local
+  name: Set BIOS Attributes
+  gather_facts: False
+
+  tasks:
+  - name: Set BIOS attributes
+    redfish_config:
+      category: Systems
+      command: SetBiosAttributes
+      bios_attributes:
+        ProcVirtualization: "Enabled"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"

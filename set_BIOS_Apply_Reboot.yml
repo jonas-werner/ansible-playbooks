@@ -1,0 +1,36 @@
+---
+- hosts: r640
+  connection: local
+  name: Set multiple BIOS Attributes
+  gather_facts: False
+
+  tasks:
+  - name: Set multiple BIOS attributes
+    redfish_config:
+      category: Systems
+      command: SetBiosAttributes
+      bios_attributes:
+        ProcVirtualization: "Disabled"
+        SubNumaCluster: "Disabled"
+        ProcSwPrefetcher: "Disabled"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Create BIOS configuration job (schedule BIOS setting update)
+    idrac_redfish_command:
+      category: Systems
+      command: CreateBiosConfigJob
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+
+  - name: Restart system power gracefully
+    redfish_command:
+      category: Systems
+      command: PowerGracefulRestart
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+

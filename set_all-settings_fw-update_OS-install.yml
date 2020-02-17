@@ -1,0 +1,56 @@
+---
+- hosts: r640
+  connection: local
+  name: Update all server attributes, Update FW, Change boot to PXE, Install OS
+  gather_facts: False
+
+  vars:
+    bootdevice: "Pxe"
+    scp_file: "r640-all-settings_2020-02-10.xml"
+    bootorder: "r640-boot-order.hddseq.xml"
+
+  tasks:
+
+  - name: Import Server Configuration Profile from a network share
+    idrac_server_config_profile:
+      idrac_ip: "{{ baseuri }}"
+      idrac_user: "{{ username }}"
+      idrac_password: "{{ password }}"
+      command: "import"
+      share_name: "10.6.28.32:/nfs/ServerConfig"
+      share_user: "share_user_name"
+      share_password: "share_user_password"
+      scp_file: "{{ scp_file }}"
+      scp_components: "ALL"
+      job_wait: True
+
+  - name: Change boot order to put newly created RAID volume first
+    idrac_server_config_profile:
+      idrac_ip: "{{ baseuri }}"
+      idrac_user: "{{ username }}"
+      idrac_password: "{{ password }}"
+      command: "import"
+      share_name: "10.6.28.32:/nfs/ServerConfig"
+      share_user: "share_user_name"
+      share_password: "share_user_password"
+      scp_file: "{{ bootorder }}"
+      scp_components: "ALL"
+      job_wait: True
+
+  - name: Set one-time boot device to {{ bootdevice }}
+    redfish_command:
+      category: Systems
+      command: SetOneTimeBoot
+      bootdevice: "{{ bootdevice }}"
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+  - name: Reboot system power gracefully
+    redfish_command:
+      category: Systems
+      command: PowerGracefulRestart
+      baseuri: "{{ baseuri }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+

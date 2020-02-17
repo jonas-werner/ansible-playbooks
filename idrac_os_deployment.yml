@@ -1,0 +1,23 @@
+--- 
+- 
+  connection: local
+  gather_facts: false
+  hosts: r640
+  
+  vars:
+    sharename: "10.6.28.32:/nfs/ServerConfig"
+
+  name: Booting to Network Operating System image
+  tasks: 
+    - name: "Booting to Network Operating System image"
+      idrac_os_deployment:
+        idrac_ip: "{{ baseuri }}"
+        idrac_password: "{{ password }}"
+        idrac_user: "{{ username }}"
+        share_name: "{{ sharename }}"
+        iso_image: "custom_esxi.iso"        
+        expose_duration: 180
+
+      tags:
+        - network_iso
+
